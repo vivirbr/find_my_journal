@@ -1,10 +1,10 @@
 # Loading packages
-library(httr)
-library(rjson)
-library(shiny)
-library(readr)
-library(dplyr)
-library(shinythemes)
+library(httr) # POST
+library(rjson) # JSON format
+library(shiny) # shiny application
+library(readr) # read delim
+library(dplyr) # pipe notation
+library(shinythemes) # shiny themes such as the slate used here
 
 # Setting a very simple page with a left panel with the input for the prompt
 # the output of the function will return as a table in the right panel
@@ -19,11 +19,11 @@ ui <- fluidPage(
       textInput("key", "Key words:", ""), 
       textInput("sentence", "Teaser:", "A Review disentangles the numbers behind agriculture-driven deforestation and explains the different forms it can take."), 
       br(),
-      actionButton("searchButton", "Search")
+      actionButton("searchButton", "Search") #see more on the isolate function below
     )),
     column(8,
       h4("List of the best journals according to the information provided:"),
-        tableOutput("answer")
+        tableOutput("answer") # prints the output table
     )
   )
 )
@@ -59,13 +59,12 @@ server <- function(input,output) {
 
         body = toJSON(list_object) # It is important that the body is a json instead of a simple list
 
-        response <- httr::POST(url, headers = headers, body = body, encode = "json") # Send the request and get the response.
+        response <- POST(url, headers = headers, body = body, encode = "json") # Send the request and get the response.
         json <- fromJSON(rawToChar(response$content)) # Returning the response content
 
         # reading the only answer provided in a data.frame format
         tab <- data.frame(read_delim(json$candidates[[1]]$output, delim = '|', col_names=TRUE, show_col_types = FALSE)) 
         tab <- tab %>% select(where(~!all(is.na(.)))) # removing columns that are purely NAs
-        # colnames(tab) <- gsub(colnames(tab), pattern = "X...|\\...", replacement = "")  
         colnames(tab) <- c("Journal","Impact Factor", "Link")
         tab <- tab[-1,] #removing first empty row
 
