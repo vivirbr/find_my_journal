@@ -1,4 +1,4 @@
-## Find your journal - A quick adventure mixing PaLM AI 2 and R Shiny apps
+## Find my journal - A quick adventure mixing PaLM AI 2 and R Shiny apps
 ### An PaLM AI based application that finds you the most suitable scientific journal for your publication, based on components such as title, keywords, and short descriptions.
 
 Welcome to the episode one of Rcandoit! 
